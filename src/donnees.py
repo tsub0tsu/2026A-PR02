@@ -54,3 +54,6 @@ def nettoyer_donnees(df : pd.DataFrame)-> pd.DataFrame :
 
 def slautudg():
     print("hello world")
+    
+def():
+    print("sgsdgs")
