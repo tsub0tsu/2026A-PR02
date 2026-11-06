@@ -51,3 +51,6 @@ def nettoyer_donnees(df : pd.DataFrame)-> pd.DataFrame :
     df = df[df["max_power"] > 0]
     df = df[df["km_driven"] <= 500_000]
     return df.reset_index(drop=True)
+
+def slautudg():
+    print("hello world")
