@@ -1,6 +1,6 @@
 import os 
 import pandas as pd 
-from src.exceptions import DonneeInvalideError
+from exceptions import DonneeInvalideError
 
 COLONNES_NUMERIQUES = ["year", "km_driven", "mileage", "engine", "max_power", "seats"]
 COLONNES_CATEGORIELLES = ["fuel", "seller_type", "transmission", "owner", "marque"]
@@ -14,7 +14,7 @@ def charger_donnees(chemin:str)-> pd.DataFrame :
     """
     if not os.path.exists(chemin):
         raise FileNotFoundError(f"Fichier introuvable : {chemin}")
-    df = pd.read_csv(chemin) #demander si ok ? ou with obligatoire
+    df = pd.read_csv(chemin) 
     if CIBLE not in df.columns : 
         raise DonneeInvalideError(f"La colonne cible '{CIBLE}est absente")
     return df
@@ -49,5 +49,6 @@ def nettoyer_donnees(df : pd.DataFrame)-> pd.DataFrame :
     df = df.drop(columns=["name", "torque"])
     df = df.dropna()
     df = df[df["max_power"] > 0]
+    df = df[df["mileage"] > 0]
     df = df[df["km_driven"] <= 500_000]
     return df.reset_index(drop=True)
