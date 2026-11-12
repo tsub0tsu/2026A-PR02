@@ -18,7 +18,7 @@ from donnees import COLONNES_NUMERIQUES, COLONNES_CATEGORIELLES, CIBLE
 GRAINE = 22
 
 def chronometrer(fonction): 
-    """Décorateur qui affiche la durée d'exécution de la focntion décorée."""
+    """Décorateur qui affiche la durée d'exécution de la fonction décorée."""
     def nouvelle(modele, X, y):
         debut = time.time()
         resultat = fonction(modele, X, y)
@@ -29,7 +29,7 @@ def chronometrer(fonction):
 
 def separer_donnees(df: pd.DataFrame, taille_test: float = 0.2) -> tuple:
     """Sépare les données en ensemble d'entraînement et de test.
-    Reçoit le DataFrame propre et les 80% de lignes réservées au test.
+    Reçoit le DataFrame propre et les 20% de lignes réservées au test.
     Renvoie X_train, X_test, y_train, y_test. 
     """
     X = df[COLONNES_CATEGORIELLES + COLONNES_NUMERIQUES]

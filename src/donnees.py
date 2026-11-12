@@ -16,7 +16,7 @@ def charger_donnees(chemin:str)-> pd.DataFrame :
         raise FileNotFoundError(f"Fichier introuvable : {chemin}")
     df = pd.read_csv(chemin) 
     if CIBLE not in df.columns : 
-        raise DonneeInvalideError(f"La colonne cible '{CIBLE}est absente")
+        raise DonneeInvalideError(f"La colonne cible '{CIBLE}' est absente")
     return df
 
 def extraire_nombre(colonne : pd.Series)-> pd.Series :

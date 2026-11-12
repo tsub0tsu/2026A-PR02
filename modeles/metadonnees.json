@@ -1,0 +1,81 @@
+{
+  "cible": "selling_price",
+  "unite_cible": "roupies indiennes",
+  "colonnes_numeriques": {
+    "year": {
+      "min": 1994.0,
+      "max": 2020.0
+    },
+    "km_driven": {
+      "min": 1000.0,
+      "max": 500000.0
+    },
+    "mileage": {
+      "min": 9.0,
+      "max": 42.0
+    },
+    "engine": {
+      "min": 624.0,
+      "max": 3604.0
+    },
+    "max_power": {
+      "min": 34.2,
+      "max": 400.0
+    },
+    "seats": {
+      "min": 4.0,
+      "max": 14.0
+    }
+  },
+  "colonnes_categorielles": {
+    "fuel": [
+      "Diesel",
+      "Petrol"
+    ],
+    "seller_type": [
+      "Dealer",
+      "Individual",
+      "Trustmark Dealer"
+    ],
+    "transmission": [
+      "Automatic",
+      "Manual"
+    ],
+    "owner": [
+      "First Owner",
+      "Fourth & Above Owner",
+      "Second Owner",
+      "Third Owner"
+    ],
+    "marque": [
+      "Audi",
+      "Autre",
+      "BMW",
+      "Chevrolet",
+      "Datsun",
+      "Fiat",
+      "Ford",
+      "Honda",
+      "Hyundai",
+      "Jeep",
+      "Mahindra",
+      "Maruti",
+      "Mercedes-Benz",
+      "Mitsubishi",
+      "Nissan",
+      "Renault",
+      "Skoda",
+      "Tata",
+      "Toyota",
+      "Volkswagen"
+    ]
+  },
+  "metriques": {
+    "mae": 73707.44247101957,
+    "r2": 0.9270944551793421
+  },
+  "metriques_reference": {
+    "mae": 288865.0815945182,
+    "r2": -0.00021776937912587613
+  }
+}
