@@ -52,3 +52,44 @@ def nettoyer_donnees(df : pd.DataFrame)-> pd.DataFrame :
     df = df[df["mileage"] > 0]
     df = df[df["km_driven"] <= 500_000]
     return df.reset_index(drop=True)
+
+# verifie les donnes de l interface(page4)
+def verifier_champ_rempli(texte: str, nom: str) -> None:
+    """ la foncitonne Reçoit un texte et un nom, elle ne renvoie rien et  elle lève DonneeInvalideError si le texte est vide."""
+    if texte.strip() == "":
+        raise DonneeInvalideError(f"Veuillez remplir le champ : {nom}.")
+    
+
+def valider_entier(texte: str, nom: str, minimum: float, maximum: float) -> int:
+    """Reçoit une saisie(texte), son nom et ses limites(min et max).elle Renvoie un entier valide ou lève DonneeInvalideError."""
+    verifier_champ_rempli(texte, nom)
+    try:
+        valeur = int(texte) 
+    except ValueError:
+        raise DonneeInvalideError(f"{nom} doit être un nombre entier.")
+
+    if valeur < minimum or valeur > maximum:
+        raise DonneeInvalideError( f"{nom} doit être entre {minimum} et {maximum}.")
+
+    return valeur
+
+def valider_decimal(texte: str, nom: str, minimum: float, maximum: float) -> float:
+    """Reçoit une saisie(texte), son nom et ses limites,Elle Renvoie un nombre valide ou lève DonneeInvalideError."""
+    verifier_champ_rempli(texte, nom)
+    try:
+        valeur = float(texte)
+    except ValueError:
+        raise DonneeInvalideError(f"{nom} doit être un nombre.")
+    if not (minimum <= valeur <= maximum):
+        raise DonneeInvalideError(f"{nom} doit être entre {minimum} et {maximum}.")
+
+    return valeur
+
+def valider_categorie(choix: str, nom: str, options: list[str]) -> str:
+    """Reçoit un choix, son nom et les options autorisées.elle Renvoie le choix ou lève DonneeInvalideError s’il est invalide."""
+    verifier_champ_rempli(choix, nom)
+
+    if choix not in options:
+        raise DonneeInvalideError(f"Choix invalide pour : {nom}.")
+
+    return choix

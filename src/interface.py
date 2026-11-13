@@ -1,12 +1,21 @@
 import json
 import os
 import streamlit as st
+from donnees import valider_entier, valider_decimal, valider_categorie
+from exceptions import DonneeInvalideError
 
 chemin = os.path.join("modeles", "metadonnees.json")
 
-with open(chemin, "r", encoding="utf-8") as f:         
-    metadonnees = json.load(f)             # charge le metadonnee.json
-# LES LIMIES DES INFORMATIONS
+if not os.path.isfile(chemin):
+    st.error("Le fichier de métadonnées est introuvable.")
+    st.stop()
+
+with open(chemin, "r", encoding="utf-8") as f:
+    metadonnees = json.load(f) 
+    
+    
+    
+    
 
 annee_min = metadonnees["colonnes_numeriques"]["year"]["min"]
 annee_max = metadonnees["colonnes_numeriques"]["year"]["max"]    
@@ -21,22 +30,33 @@ places_max = metadonnees["colonnes_numeriques"]["seats"]["max"]
 puissance_min = metadonnees["colonnes_numeriques"]["max_power"]["min"]
 puissance_max = metadonnees["colonnes_numeriques"]["max_power"]["max"]
 
+cylindree_min = metadonnees["colonnes_numeriques"]["engine"]["min"]
+cylindree_max = metadonnees["colonnes_numeriques"]["engine"]["max"]
+
+rendement_min = metadonnees["colonnes_numeriques"]["mileage"]["min"]
+rendement_max = metadonnees["colonnes_numeriques"]["mileage"]["max"]
     
     
 st.title("Informations de la voiture") # titre
 
-# INFORMATION RENTER PAR L'UTILISATEUR 
-annee = st.text_input("Année de la voiture")  # sa fait la case sur l interface avec le text_input()
-kilometrage = st.text_input("Kilométrage de la voiture (km)")
-places = st.text_input("Nombre de places")
-puissance = st.text_input("Puissance du moteur (bhp)")
+info_Rentrer = {}
+
+for colonne in metadonnees["colonnes_numeriques"]:
+    info_Rentrer[colonne] = st.text_input(colonne)
+
+annee = info_Rentrer["year"]
+kilometrage = info_Rentrer["km_driven"]
+places = info_Rentrer["seats"]
+puissance = info_Rentrer["max_power"]
+cylindree =info_Rentrer["engine"]
+rendement = info_Rentrer["mileage"]
 
 # AFFICHAGE A L'ECRAN POUR SELECTIONNER OU RENTER LES INFO DEMANDER
 
 #1
 choix_carburants = metadonnees["colonnes_categorielles"]["fuel"]
 
-carburant = st.selectbox("Carburant", choix_carburants) 
+carburant = st.selectbox("Carburant", choix_carburants)  
 #2
 choix_transmissions = metadonnees["colonnes_categorielles"]["transmission"]
 
@@ -54,41 +74,51 @@ choix_proprietaires = metadonnees["colonnes_categorielles"]["owner"]
 
 proprietaire = st.selectbox("Catégorie de propriétaire", choix_proprietaires)
 
-# VERIFIER SI LES INFORMATION RENTRE SONT VALIDE 
-
+# VERIFIER SI LES INFORMATION RENTRE SONT VALIDE  
 if st.button("Valider"):
-    if annee.strip() == "":
-        st.error("Veuillez entrer une année.")
+    try:
+        valeur = valider_entier(annee, "Année", annee_min, annee_max)
         
-    elif kilometrage.strip() == "":
-        st.error("Veuillez entrer un kilométrage.")
+        valeur_km = valider_entier(kilometrage, "Kilométrage", kilometrage_min, kilometrage_max)
         
-    elif places.strip() == "":
-        st.error("Veuillez entrer le nombre de places.")
+        valeur_places = valider_entier(places, "Places", places_min, places_max)
         
-    elif puissance.strip() == "":
-        st.error("Veuillez entrer la puissance du moteur.")
-        
-    else:
-         try:
-            valeur = int(annee)
-            valeur_km = int(kilometrage)
-            valeur_places = int(places)
-            valeur_puissance = float(puissance)
+        valeur_cylindree = valider_entier(cylindree, "Cylindrée", cylindree_min, cylindree_max)
 
-            if valeur < annee_min or valeur > annee_max:
-                st.error("Veuilliez rentrer une année  entre 1994 et 2020")
-                
-            elif valeur_km < kilometrage_min or valeur_km > kilometrage_max:
-                st.error("Veuillez entre un  kilométrage entre 1000 et 500 000") 
-                
-            elif valeur_places < places_min or valeur_places > places_max:
-                st.error("Veuillez rentrer  nombre de places entre 4 et 14") 
-                
-            else:
-               st.success("L’année, le kilométrage et le nombre de places sont valides.")
-               
-         except ValueError:
-            st.error("Entrez des nombres entiers pour l’année, le kilométrage et les places, et un nombre pour la puissance.")
+        valeur_puissance = valider_decimal(puissance, "Puissance", puissance_min, puissance_max)
+        
+        valeur_rendement = valider_decimal(rendement, "Rendement", rendement_min, rendement_max)
+        
+        carburant = valider_categorie(carburant, "Carburant", choix_carburants)
+        
+        transmission = valider_categorie(transmission, "Transmission", choix_transmissions)
+        
+        marque = valider_categorie(marque, "Marque", choix_marques)
+        
+        vendeur = valider_categorie(vendeur, "Vendeur", choix_vendeurs)
+        
+        proprietaire = valider_categorie(proprietaire, "Propriétaire", choix_proprietaires)
 
+        donnees_voiture = {
+            "year": valeur,
+            "km_driven": valeur_km,
+            "seats": valeur_places,
+            "max_power": valeur_puissance,
+            "engine": valeur_cylindree,
+            "mileage": valeur_rendement,
+            "fuel": carburant,
+            "transmission": transmission,
+            "marque": marque,
+            "seller_type": vendeur,
+            "owner": proprietaire
+        }
+
+        st.success("Toutes les informations saisies sont valides.")
+        st.write(donnees_voiture)
+
+    except DonneeInvalideError as erreur:
+        st.error(str(erreur))
+        
+ 
+        
 #python -m streamlit run src/interface.py  
