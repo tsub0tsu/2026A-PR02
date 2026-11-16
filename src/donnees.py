@@ -24,7 +24,7 @@ def extraire_nombre(colonne : pd.Series)-> pd.Series :
     Reçoit une colonne de textes
     Renvoie une colonne de nombres (ou NaN si texte pas convertible)
     """
-    premier_mot = colonne.str.split().str[0]
+    premier_mot = colonne.str.split().str[0] 
     return pd.to_numeric(premier_mot, errors="coerce")
 
 def nettoyer_donnees(df : pd.DataFrame)-> pd.DataFrame :
@@ -33,20 +33,20 @@ def nettoyer_donnees(df : pd.DataFrame)-> pd.DataFrame :
     Renvoie un nouveau DataFrame propre. 
     """
     df = df.copy()
-    df = df[df["fuel"].isin(["Diesel", "Petrol"])]
+    df = df[df["fuel"].isin(["Diesel", "Petrol"])] # Triage
     df = df[df["owner"] != "Test Drive Car"]
 
     df["mileage"] = extraire_nombre(df["mileage"])
-    df["engine"] = extraire_nombre(df["engine"])
+    df["engine"] = extraire_nombre(df["engine"])    # formatage des tableaux
     df["max_power"] = extraire_nombre(df["max_power"])
 
     df["marque"] = df["name"].str.split().str[0]
-    comptes = df["marque"].value_counts()
+    comptes = df["marque"].value_counts() # compte nombre de fois chaque marque apparais
     marques_rares = [marque for marque, nombre in comptes.items() if nombre < 10]
-    df.loc[df["marque"].isin(marques_rares), "marque"] = "Autre"
+    df.loc[df["marque"].isin(marques_rares), "marque"] = "Autre"  # les marques rares finisnent dans la colone autre
 
     df = df.drop(columns=["name", "torque"])
-    df = df.drop_duplicates()
+    df = df.drop_duplicates() # enleve double
     df = df.dropna()
     df = df[df["max_power"] > 0]
     df = df[df["mileage"] > 0]
@@ -55,7 +55,7 @@ def nettoyer_donnees(df : pd.DataFrame)-> pd.DataFrame :
 
 # verifie les donnes de l interface(page4)
 def verifier_champ_rempli(texte: str, nom: str) -> None:
-    """ la foncitonne Reçoit un texte et un nom, elle ne renvoie rien et  elle lève DonneeInvalideError si le texte est vide."""
+    """ la fonction Reçoit un texte et un nom, elle ne renvoie rien et  elle lève DonneeInvalideError si le texte est vide."""
     if texte.strip() == "":
         raise DonneeInvalideError(f"Veuillez remplir le champ : {nom}.")
     

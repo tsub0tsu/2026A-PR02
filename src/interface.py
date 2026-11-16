@@ -38,8 +38,8 @@ kilometrage_max = metadonnees["colonnes_numeriques"]["km_driven"]["max"]
 places_min = metadonnees["colonnes_numeriques"]["seats"]["min"]
 places_max = metadonnees["colonnes_numeriques"]["seats"]["max"]
 
-puissance_min = metadonnees["colonnes_numeriques"]["max_power"]["min"]
-puissance_max = metadonnees["colonnes_numeriques"]["max_power"]["max"]
+max_power_min = metadonnees["colonnes_numeriques"]["max_power"]["min"]
+max_power_max = metadonnees["colonnes_numeriques"]["max_power"]["max"]
 
 engine_min = metadonnees["colonnes_numeriques"]["engine"]["min"]
 engine_max = metadonnees["colonnes_numeriques"]["engine"]["max"]
