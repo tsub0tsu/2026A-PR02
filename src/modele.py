@@ -16,6 +16,7 @@ from sklearn.metrics  import r2_score
 from donnees import COLONNES_NUMERIQUES, COLONNES_CATEGORIELLES, CIBLE
 
 GRAINE = 22
+COLONNES_ENTREE = COLONNES_CATEGORIELLES + COLONNES_NUMERIQUES
 
 def chronometrer(fonction): 
     """Décorateur qui affiche la durée d'exécution de la fonction décorée."""
@@ -32,7 +33,7 @@ def separer_donnees(df: pd.DataFrame, taille_test: float = 0.2) -> tuple:
     Reçoit le DataFrame propre et les 20% de lignes réservées au test.
     Renvoie X_train, X_test, y_train, y_test. 
     """
-    X = df[COLONNES_CATEGORIELLES + COLONNES_NUMERIQUES]
+    X = df[COLONNES_ENTREE]
     y = df[CIBLE]
     return train_test_split(X, y, test_size=taille_test, random_state=GRAINE)
 
@@ -104,3 +105,38 @@ def sauvegarder(modele, metadonnees: dict, dossier: str) -> None:
     joblib.dump(modele, os.path.join(dossier, "modele.joblib"), compress=3)
     with open(os.path.join(dossier, "metadonnees.json"), "w", encoding="utf-8") as f:
         json.dump(metadonnees, f, indent=2, ensure_ascii=False)
+
+class ModelePrix:
+    """Modèle entraîné, rechargé depuis le disque avec ses métadonnées."""
+
+    def __init__(self, dossier: str):
+        """Charge modele.joblibet metadonnees.json depuis le dossier. 
+        Donne FileNotFoundError si un des deux fichiers est absent.
+        """
+        chemin_modele = os.path.join(dossier, "modele.joblib")
+        chemin_metadonnees = os.path.join(dossier, "metadonnees.json")
+        if not os.path.exists(chemin_modele) or not os.path.exists(chemin_metadonnees):
+            raise FileNotFoundError(f"Modele introuvable dans {dossier} : lancez d'abord src/entrainer.py")
+        self._pipeline = joblib.load(chemin_modele)
+        with open(chemin_metadonnees, "r", encoding="utf-8") as f :
+            self._metadonnees = json.load(f)
+
+    @property
+    def metadonnees(self) -> dict :
+        """Lecture des metadonnees du modele"""
+        return self._metadonnees
+
+    @property
+    def erreur_moyenne(self) -> float:
+        """MAE obtenue en roupies indiennes"""
+        return self._metadonnees["metriques"]["mae"]
+
+    def predire(self, valeurs: dict) -> float :
+        """Predit le prix d'une voiture. 
+        Recoit un dictionnaire avec les 11 caracteristiques et renvoie un prix estime en roupies indiennes
+        """
+        ligne = pd.DataFrame({colonne: [valeurs[colonne]] for colonne in COLONNES_ENTREE})
+        return float(self._pipeline.predict(ligne)[0])
+
+    def __str__(self) -> str :
+        return f"Foret aleatoire (erreur moyenne : {self.erreur_moyenne:.0f} roupies)"

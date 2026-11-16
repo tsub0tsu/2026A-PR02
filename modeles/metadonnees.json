@@ -57,7 +57,9 @@
       "Ford",
       "Honda",
       "Hyundai",
+      "Jaguar",
       "Jeep",
+      "Lexus",
       "Mahindra",
       "Maruti",
       "Mercedes-Benz",
@@ -67,15 +69,16 @@
       "Skoda",
       "Tata",
       "Toyota",
-      "Volkswagen"
+      "Volkswagen",
+      "Volvo"
     ]
   },
   "metriques": {
-    "mae": 73707.44247101957,
-    "r2": 0.9270944551793421
+    "mae": 78815.30705333296,
+    "r2": 0.9009297506285052
   },
   "metriques_reference": {
-    "mae": 288865.0815945182,
-    "r2": -0.00021776937912587613
+    "mae": 291231.36767994147,
+    "r2": -0.00042774532488243366
   }
 }

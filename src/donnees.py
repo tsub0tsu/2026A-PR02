@@ -33,7 +33,6 @@ def nettoyer_donnees(df : pd.DataFrame)-> pd.DataFrame :
     Renvoie un nouveau DataFrame propre. 
     """
     df = df.copy()
-    df = df.drop_duplicates()
     df = df[df["fuel"].isin(["Diesel", "Petrol"])]
     df = df[df["owner"] != "Test Drive Car"]
 
@@ -47,6 +46,7 @@ def nettoyer_donnees(df : pd.DataFrame)-> pd.DataFrame :
     df.loc[df["marque"].isin(marques_rares), "marque"] = "Autre"
 
     df = df.drop(columns=["name", "torque"])
+    df = df.drop_duplicates()
     df = df.dropna()
     df = df[df["max_power"] > 0]
     df = df[df["mileage"] > 0]

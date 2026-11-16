@@ -2,11 +2,23 @@ import json
 import os
 import streamlit as st
 
+from modele import ModelePrix
+from donnees import charger_donnees, nettoyer_donnees, CIBLE
+from graphiques import creer_graphique
+
+try:
+    modele = ModelePrix("modeles")
+    voitures = nettoyer_donnees(charger_donnees(os.path.join("donnees", "voitures.csv")))
+    prix_connus = voitures[CIBLE]
+except FileNotFoundError as erreur : 
+    st.error(str(erreur))
+    st.stop()
+
 chemin = os.path.join("modeles", "metadonnees.json")
 
 with open(chemin, "r", encoding="utf-8") as f:         
     metadonnees = json.load(f)             # charge le metadonnee.json
-# LES LIMIES DES INFORMATIONS
+# LES LIMITES DES INFORMATIONS
 
 annee_min = metadonnees["colonnes_numeriques"]["year"]["min"]
 annee_max = metadonnees["colonnes_numeriques"]["year"]["max"]    
@@ -17,11 +29,9 @@ kilometrage_max = metadonnees["colonnes_numeriques"]["km_driven"]["max"]
 places_min = metadonnees["colonnes_numeriques"]["seats"]["min"]
 places_max = metadonnees["colonnes_numeriques"]["seats"]["max"]
 
-
 puissance_min = metadonnees["colonnes_numeriques"]["max_power"]["min"]
 puissance_max = metadonnees["colonnes_numeriques"]["max_power"]["max"]
 
-    
     
 st.title("Informations de la voiture") # titre
 
@@ -91,4 +101,4 @@ if st.button("Valider"):
          except ValueError:
             st.error("Entrez des nombres entiers pour l’année, le kilométrage et les places, et un nombre pour la puissance.")
 
-#python -m streamlit run src/interface.py  
+# python -m streamlit run src/interface.py  
