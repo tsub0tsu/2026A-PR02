@@ -16,7 +16,8 @@ print(propre.describe())
 print(propre["marque"].value_counts())
 
 fig, axes = plt.subplots(1, 2, figsize=(12,5))
-
+#graphique netoyé deux graphique avec axe different
+ 
 axes[0].hist(propre[CIBLE] / 100_000, bins=50, color ="steelblue")
 axes[0].set_title("Distribution des prix de vente")
 axes[0].set_xlabel("Prix de vente (centaines de milliers de roupies)")
