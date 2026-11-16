@@ -24,3 +24,4 @@ MAE + R² car R tout seul est pas clair tandis que MAE permet de dire a quel poi
 Pour le modele on a pris une foret aleatoire car le prix des voitures ne descend ou monte pas en ligne droite en fonction des differentes variables. La foret permet de prendre en compte l'effet des differentes variables sur le prix. (chiffres a rajouter apres test je les ai plus).
 
 
+Resultats de l'entrainement : Forêt aléatoire : {'mae': 78815.30705333296, 'r2': 0.9009297506285052}
