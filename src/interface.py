@@ -41,11 +41,11 @@ places_max = metadonnees["colonnes_numeriques"]["seats"]["max"]
 puissance_min = metadonnees["colonnes_numeriques"]["max_power"]["min"]
 puissance_max = metadonnees["colonnes_numeriques"]["max_power"]["max"]
 
-cylindree_min = metadonnees["colonnes_numeriques"]["engine"]["min"]
-cylindree_max = metadonnees["colonnes_numeriques"]["engine"]["max"]
+engine_min = metadonnees["colonnes_numeriques"]["engine"]["min"]
+engine_max = metadonnees["colonnes_numeriques"]["engine"]["max"]
 
-rendement_min = metadonnees["colonnes_numeriques"]["mileage"]["min"]
-rendement_max = metadonnees["colonnes_numeriques"]["mileage"]["max"]
+mileage_min = metadonnees["colonnes_numeriques"]["mileage"]["min"]
+mileage_max = metadonnees["colonnes_numeriques"]["mileage"]["max"]
     
 st.title("Informations de la voiture") # titre
 
@@ -59,7 +59,7 @@ kilometrage = info_Rentrer["km_driven"]
 places = info_Rentrer["seats"]
 puissance = info_Rentrer["max_power"]
 cylindree =info_Rentrer["engine"]
-rendement = info_Rentrer["mileage"]
+mileage = info_Rentrer["mileage"]
 
 # AFFICHAGE A L'ECRAN POUR SELECTIONNER OU RENTER LES INFO DEMANDER
 
@@ -93,11 +93,11 @@ if st.button("Valider"):
         
         valeur_places = valider_entier(places, "Places", places_min, places_max)
         
-        valeur_cylindree = valider_entier(cylindree, "Cylindrée", cylindree_min, cylindree_max)
+        valeur_engine = valider_entier(cylindree, "Engine", engine_min, engine_max)
 
         valeur_puissance = valider_decimal(puissance, "Puissance", puissance_min, puissance_max)
-        
-        valeur_rendement = valider_decimal(rendement, "Rendement", rendement_min, rendement_max)
+
+        valeur_mileage = valider_decimal(mileage, "Mileage", mileage_min, mileage_max)
         
         carburant = valider_categorie(carburant, "Carburant", choix_carburants)
         
