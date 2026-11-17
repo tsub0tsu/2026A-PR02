@@ -1,17 +1,20 @@
 import json
 import os
 import streamlit as st
+import pandas as pd
 from donnees import valider_entier, valider_decimal, valider_categorie
 from exceptions import DonneeInvalideError
 
-from modele import ModelePrix
+from modele import ModelePrix, COLONNES_ENTREE
 from donnees import charger_donnees, nettoyer_donnees, CIBLE
 from graphiques import creer_graphique
+from historique import Historique
 
 try:
     modele = ModelePrix("modeles")
     voitures = nettoyer_donnees(charger_donnees(os.path.join("donnees", "voitures.csv")))
     prix_connus = voitures[CIBLE]
+    historique = Historique(os.path.join("donnees", "historique.csv"), COLONNES_ENTREE)
 except FileNotFoundError as erreur : 
     st.error(str(erreur))
     st.stop()
@@ -95,7 +98,7 @@ if st.button("Valider"):
         
         valeur_engine = valider_entier(cylindree, "Engine", engine_min, engine_max)
 
-        valeur_puissance = valider_decimal(puissance, "Puissance", puissance_min, puissance_max)
+        valeur_puissance = valider_decimal(puissance, "Puissance", max_power_min, max_power_max)
 
         valeur_mileage = valider_decimal(mileage, "Mileage", mileage_min, mileage_max)
         
@@ -114,8 +117,8 @@ if st.button("Valider"):
             "km_driven": valeur_km,
             "seats": valeur_places,
             "max_power": valeur_puissance,
-            "engine": valeur_cylindree,
-            "mileage": valeur_rendement,
+            "engine": valeur_engine,
+            "mileage": valeur_mileage,
             "fuel": carburant,
             "transmission": transmission,
             "marque": marque,
@@ -123,12 +126,14 @@ if st.button("Valider"):
             "owner": proprietaire
         }
 
-        st.success("Toutes les informations saisies sont valides.")
-        st.write(donnees_voiture)
+        prix_estime = modele.predire(donnees_voiture)
+        historique.ajouter(donnees_voiture, prix_estime)
+        st.success(f"Prix estimé : environ {prix_estime:.0f} roupies indiennes")
+        st.write(f"En moyenne, le modèle se trompe de ± {modele.erreur_moyenne:.0f} roupies indiennes.")
+        st.pyplot(creer_graphique(prix_connus, prix_estime))
 
     except DonneeInvalideError as erreur:
         st.error(str(erreur))
         
- 
         
 #python -m streamlit run src/interface.py  
