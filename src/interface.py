@@ -51,11 +51,21 @@ mileage_min = metadonnees["colonnes_numeriques"]["mileage"]["min"]
 mileage_max = metadonnees["colonnes_numeriques"]["mileage"]["max"]
     
 st.title("Informations de la voiture") # titre
+st.warning("Attention estimation basée sur le marché indien donc à prendre avec du recul pour le marché canadien")
 
 info_Rentrer = {}
 
+ETIQUETTES = {
+    "year": "Année du modèle",
+    "km_driven": "Kilométrage",
+    "mileage": "Consommation (km/L)",
+    "engine": "Cylindrée",
+    "max_power": "Puissance",
+    "seats": "Nombre de places",
+}
+
 for colonne in metadonnees["colonnes_numeriques"]:
-    info_Rentrer[colonne] = st.text_input(colonne)
+    info_Rentrer[colonne] = st.text_input(ETIQUETTES[colonne])
 
 annee = info_Rentrer["year"]
 kilometrage = info_Rentrer["km_driven"]
@@ -96,11 +106,11 @@ if st.button("Valider"):
         
         valeur_places = valider_entier(places, "Places", places_min, places_max)
         
-        valeur_engine = valider_entier(cylindree, "Engine", engine_min, engine_max)
+        valeur_engine = valider_entier(cylindree, "Cylindrée", engine_min, engine_max)
 
         valeur_puissance = valider_decimal(puissance, "Puissance", max_power_min, max_power_max)
 
-        valeur_mileage = valider_decimal(mileage, "Mileage", mileage_min, mileage_max)
+        valeur_mileage = valider_decimal(mileage, "Consommation", mileage_min, mileage_max)
         
         carburant = valider_categorie(carburant, "Carburant", choix_carburants)
         
@@ -135,5 +145,11 @@ if st.button("Valider"):
     except DonneeInvalideError as erreur:
         st.error(str(erreur))
         
-        
+st.subheader("Historique des estimations")
+lignes = historique.lire()
+if len(lignes) <= 1:
+    st.info("Aucune estimation pour le moment.")
+else :
+    st.table(pd.DataFrame(lignes[1:], columns=lignes[0]))
+
 #python -m streamlit run src/interface.py  
